@@ -1,0 +1,11 @@
+on:
+  # ruleid: pull-request-target-needs-exception
+  pull_request_target:
+    types:
+      - opened
+---
+on:
+  # ok: pull-request-target-needs-exception
+  pull_request:
+    types:
+      - opened
