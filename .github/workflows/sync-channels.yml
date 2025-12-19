@@ -1,0 +1,143 @@
+# 通道同步工作流程 / Channel Sync Workflow
+# 此工作流程自動同步主分支與開發通道之間的變更
+# This workflow automatically syncs changes between master and development channels
+
+name: Channel Sync / 通道同步
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+    inputs:
+      sync_direction:
+        description: '同步方向 / Sync Direction'
+        required: true
+        default: 'master-to-dev'
+        type: choice
+        options:
+          - master-to-dev
+          - dev-to-master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-channels:
+    name: Sync Channels / 同步通道
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Detect Default Branch
+        id: detect-branch
+        run: |
+          # Detect the default branch
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "master")
+          echo "default_branch=$DEFAULT_BRANCH" >> $GITHUB_OUTPUT
+          echo "Detected default branch: $DEFAULT_BRANCH"
+
+      - name: Sync Master to Dev
+        if: github.event.inputs.sync_direction != 'dev-to-master'
+        run: |
+          DEFAULT_BRANCH="${{ steps.detect-branch.outputs.default_branch }}"
+          
+          # Check if dev channel exists
+          if git ls-remote --exit-code --heads origin dev >/dev/null 2>&1; then
+            echo "Development channel exists, syncing from $DEFAULT_BRANCH..."
+            git checkout dev
+            git pull origin dev
+            
+            # Attempt merge with conflict detection
+            if ! git merge "origin/$DEFAULT_BRANCH" --no-edit; then
+              echo "::error::Merge conflict detected. Manual resolution required."
+              exit 1
+            fi
+            
+            git push origin dev
+            echo "✅ Successfully synced $DEFAULT_BRANCH to dev"
+          else
+            echo "Creating development channel from $DEFAULT_BRANCH..."
+            git checkout -b dev
+            git push -u origin dev
+            echo "✅ Created new dev branch"
+          fi
+
+      - name: Sync Dev to Master
+        if: github.event.inputs.sync_direction == 'dev-to-master'
+        run: |
+          DEFAULT_BRANCH="${{ steps.detect-branch.outputs.default_branch }}"
+          
+          # Check if dev branch exists
+          if ! git ls-remote --exit-code --heads origin dev >/dev/null 2>&1; then
+            echo "::error::Dev branch does not exist. Cannot sync to $DEFAULT_BRANCH."
+            exit 1
+          fi
+          
+          git checkout "$DEFAULT_BRANCH"
+          git pull origin "$DEFAULT_BRANCH"
+          
+          # Attempt merge with conflict detection
+          if ! git merge origin/dev --no-edit; then
+            echo "::error::Merge conflict detected. Manual resolution required."
+            exit 1
+          fi
+          
+          git push origin "$DEFAULT_BRANCH"
+          echo "✅ Successfully synced dev to $DEFAULT_BRANCH"
+
+      - name: Create or Update Release Channel
+        if: github.event.inputs.sync_direction != 'dev-to-master'
+        run: |
+          DEFAULT_BRANCH="${{ steps.detect-branch.outputs.default_branch }}"
+          git checkout "$DEFAULT_BRANCH"
+          
+          # Check if release channel exists
+          if git ls-remote --exit-code --heads origin release >/dev/null 2>&1; then
+            echo "Release channel exists"
+          else
+            echo "Creating release channel from $DEFAULT_BRANCH..."
+            git checkout -b release
+            git push -u origin release
+            echo "✅ Created new release branch"
+          fi
+
+      - name: Sync Summary
+        run: |
+          echo "## 同步摘要 / Sync Summary"
+          echo ""
+          echo "### 可用通道 / Available Channels:"
+          echo "- **${{ steps.detect-branch.outputs.default_branch }}**: 主要穩定通道 / Main stable channel"
+          echo "- **dev**: 開發通道 / Development channel"
+          echo "- **release**: 發布通道 / Release channel"
+          echo ""
+          echo "同步方向 / Sync Direction: ${{ github.event.inputs.sync_direction || 'master-to-dev (default)' }}"
+          echo "同步完成於 / Sync completed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+  notify-sync:
+    name: Notify Sync Status
+    runs-on: ubuntu-latest
+    needs: sync-channels
+    if: always()
+    
+    steps:
+      - name: Report Sync Status
+        run: |
+          if [ "${{ needs.sync-channels.result }}" == "success" ]; then
+            echo "✅ Channel sync completed successfully / 通道同步成功完成"
+          else
+            echo "❌ Channel sync failed / 通道同步失敗"
+            exit 1
+          fi
