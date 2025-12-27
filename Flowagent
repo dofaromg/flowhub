@@ -1,0 +1,12 @@
+# 1) 建專案
+python3 flowcore_loop.py project-init demo --title "Demo"
+
+# 2) 建 session
+python3 flowcore_loop.py session-new demo --title "Main"
+
+# 3) 送一句話（把 <sid> 換成上一步回傳的 session_id）
+python3 flowcore_loop.py session-send demo <sid> --persona demo --intent chat --text "hello mother system"
+
+# 4) 啟動最小 Web UI
+python3 flowcore_loop.py web demo --port 8787
+# 打開 http://127.0.0.1:8787/
