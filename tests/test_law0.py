@@ -25,38 +25,6 @@ from mrl.query import ParticleQuery
 # Fixtures
 # ---------------------------------------------------------------------------
 
-def _make_db() -> str:
-    """Create an in-memory SQLite DB with customers + orders tables."""
-    engine = sa.create_engine("sqlite:///:memory:")
-    with engine.begin() as conn:
-        conn.execute(sa.text("""
-            CREATE TABLE customers (
-                id   INTEGER PRIMARY KEY,
-                name TEXT NOT NULL,
-                city TEXT
-            )
-        """))
-        conn.execute(sa.text("""
-            CREATE TABLE orders (
-                id          INTEGER PRIMARY KEY,
-                customer_id INTEGER REFERENCES customers(id),
-                product     TEXT,
-                amount      REAL
-            )
-        """))
-        conn.execute(sa.text(
-            "INSERT INTO customers VALUES (1, 'Alice', 'Taipei'), "
-            "(2, 'Bob', 'Tokyo')"
-        ))
-        conn.execute(sa.text(
-            "INSERT INTO orders VALUES "
-            "(10, 1, 'Widget', 9.99), "
-            "(11, 1, 'Gadget', 19.99), "
-            "(12, 2, 'Doohickey', 4.99)"
-        ))
-    return engine.url.render_as_string(hide_password=False)
-
-
 @pytest.fixture
 def db_dsn(tmp_path):
     """SQLite file-based DB (SQLIngestor can't use :memory: across connections)."""
@@ -138,6 +106,9 @@ class TestParticle:
         r = repr(p)
         assert "Particle(" in r
         assert "test" in r
+        # Full 64-char hex id must NOT appear; truncated form with ellipsis must
+        assert p.id not in r
+        assert "…" in r
 
 
 # ---------------------------------------------------------------------------

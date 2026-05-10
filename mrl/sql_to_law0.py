@@ -136,6 +136,21 @@ def _json_safe(v: Any) -> bool:
     return v is None or isinstance(v, (bool, int, float, str, list, dict))
 
 
+def _build_row_index(
+    referred_table: str,
+    candidate_rows: list[dict[str, Any]],
+    key_cols: list[str],
+) -> dict[tuple, str]:
+    """
+    Build a lookup dict from (key_col_values…) → particle_id for O(1) FK lookups.
+    """
+    index: dict[tuple, str] = {}
+    for row in candidate_rows:
+        key = tuple(row.get(col) for col in key_cols)
+        index[key] = _derive_id(referred_table, _serialize_row(row))
+    return index
+
+
 def _find_target_id(
     referred_table: str,
     ref_pk_values: dict[str, Any],
@@ -143,9 +158,12 @@ def _find_target_id(
 ) -> str | None:
     """
     Find the particle id of the row in ``referred_table`` whose columns
-    match ``ref_pk_values``.  Returns ``None`` if not found.
+    match ``ref_pk_values``.  Returns ``None`` if not found or if any
+    FK value is ``None`` (dangling reference).
     """
-    for candidate in candidate_rows:
-        if all(str(candidate.get(col)) == str(val) for col, val in ref_pk_values.items()):
-            return _derive_id(referred_table, _serialize_row(candidate))
-    return None
+    if any(v is None for v in ref_pk_values.values()):
+        return None
+    key_cols = list(ref_pk_values.keys())
+    index = _build_row_index(referred_table, candidate_rows, key_cols)
+    key = tuple(ref_pk_values[col] for col in key_cols)
+    return index.get(key)
