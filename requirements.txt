@@ -1,0 +1,11 @@
+# MRL law_0 particle library dependencies
+sqlalchemy>=2.0,<3.0
+
+# Optional database drivers (install the one(s) you need):
+# psycopg2-binary>=2.9   # PostgreSQL
+# mysqlclient>=2.0       # MySQL / MariaDB
+# pymysql>=1.0           # MySQL (pure-Python)
+# cx-oracle>=8.0         # Oracle
+
+# Testing
+pytest>=7.0
