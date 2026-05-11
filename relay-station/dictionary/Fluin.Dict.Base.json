@@ -1,0 +1,1027 @@
+{
+  "_meta": {
+    "name": "Fluin.Dict.Base",
+    "version": "2.0",
+    "origin_signature": "MrLiouWord",
+    "created_at": "2026-05-11",
+    "source": "FlowAgent.Runtime v46 + MRL_RelayStation v0.1",
+    "layers": {
+      "L0": "Base system primitives",
+      "L1": "Structure and topology",
+      "L2": "Operation and process",
+      "L3": "Protocol and communication",
+      "L4": "Meta and governance"
+    },
+    "lod_levels": {
+      "symbol": "1-char abbreviation",
+      "q4": "1-3 word essence",
+      "q8": "concise phrase 5-10 words",
+      "fp16": "full definition sentence"
+    }
+  },
+
+  "fl-001": {
+    "concept": "system",
+    "zh": "系統",
+    "layer": "L0",
+    "symbol": "S",
+    "q4": "system",
+    "q8": "core organizing entity",
+    "fp16": "A bounded collection of interacting components that together realize a unified purpose within MRL.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-002": {
+    "concept": "flow",
+    "zh": "流",
+    "layer": "L0",
+    "symbol": "F",
+    "q4": "flow",
+    "q8": "directional movement of particles",
+    "fp16": "The continuous directional movement of data, energy, or intention through MRL channels.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-003": {
+    "concept": "seed",
+    "zh": "種子",
+    "layer": "L0",
+    "symbol": "D",
+    "q4": "seed",
+    "q8": "origin unit that spawns growth",
+    "fp16": "The minimal generative unit from which flows, agents, and structures emerge in MRL.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-004": {
+    "concept": "core",
+    "zh": "核心",
+    "layer": "L0",
+    "symbol": "C",
+    "q4": "core",
+    "q8": "central invariant processing unit",
+    "fp16": "The immutable central logic that governs particle behavior and law enforcement in MRL.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-005": {
+    "concept": "shell",
+    "zh": "殼",
+    "layer": "L0",
+    "symbol": "H",
+    "q4": "shell",
+    "q8": "protective interface boundary layer",
+    "fp16": "The outer boundary layer that mediates interaction between MRL internals and external systems.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-006": {
+    "concept": "persona",
+    "zh": "人格",
+    "layer": "L0",
+    "symbol": "P",
+    "q4": "persona",
+    "q8": "identity mask worn by an agent",
+    "fp16": "A configurable identity profile that determines how an MRL agent presents itself and responds.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-007": {
+    "concept": "memory",
+    "zh": "記憶",
+    "layer": "L0",
+    "symbol": "M",
+    "q4": "memory",
+    "q8": "persistent state storage unit",
+    "fp16": "The structured storage of past interactions and states that informs future MRL decisions.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-008": {
+    "concept": "pulse",
+    "zh": "脈衝",
+    "layer": "L0",
+    "symbol": "U",
+    "q4": "pulse",
+    "q8": "rhythmic timing signal event",
+    "fp16": "A discrete timing event that synchronizes particle flows and agent cycles across MRL.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-009": {
+    "concept": "sync",
+    "zh": "同步",
+    "layer": "L0",
+    "symbol": "Y",
+    "q4": "sync",
+    "q8": "alignment of distributed states",
+    "fp16": "The reconciliation of state across multiple MRL nodes to maintain coherent system truth.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-010": {
+    "concept": "field",
+    "zh": "場域",
+    "layer": "L0",
+    "symbol": "X",
+    "q4": "field",
+    "q8": "ambient context space for agents",
+    "fp16": "The contextual environment in which MRL agents operate and exchange particles.",
+    "origin_signature": "MrLiouWord"
+  },
+
+  "fl-011": {
+    "concept": "node",
+    "zh": "節點",
+    "layer": "L1",
+    "symbol": "N",
+    "q4": "node",
+    "q8": "addressable vertex in the graph",
+    "fp16": "A uniquely addressable processing point within the MRL topology graph.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-012": {
+    "concept": "channel",
+    "zh": "頻道",
+    "layer": "L1",
+    "symbol": "CH",
+    "q4": "channel",
+    "q8": "named conduit between nodes",
+    "fp16": "A named, typed conduit through which particles travel between MRL nodes.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-013": {
+    "concept": "bridge",
+    "zh": "橋接",
+    "layer": "L1",
+    "symbol": "B",
+    "q4": "bridge",
+    "q8": "connector linking two subsystems",
+    "fp16": "A translation and routing component that connects heterogeneous MRL subsystems.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-014": {
+    "concept": "cluster",
+    "zh": "集群",
+    "layer": "L1",
+    "symbol": "CL",
+    "q4": "cluster",
+    "q8": "group of cooperating nodes",
+    "fp16": "A logical grouping of MRL nodes that collectively handle a shared workload.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-015": {
+    "concept": "layer",
+    "zh": "層",
+    "layer": "L1",
+    "symbol": "LY",
+    "q4": "layer",
+    "q8": "horizontal abstraction level",
+    "fp16": "A horizontal abstraction stratum in MRL's hierarchical architecture.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-016": {
+    "concept": "topology",
+    "zh": "拓撲",
+    "layer": "L1",
+    "symbol": "T",
+    "q4": "topology",
+    "q8": "map of node relationships",
+    "fp16": "The structural map describing how MRL nodes connect and relate to each other.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-017": {
+    "concept": "tree",
+    "zh": "樹狀",
+    "layer": "L1",
+    "symbol": "TR",
+    "q4": "tree",
+    "q8": "hierarchical branching structure",
+    "fp16": "A hierarchical branching structure organizing MRL components from root to leaves.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-018": {
+    "concept": "mesh",
+    "zh": "網格",
+    "layer": "L1",
+    "symbol": "MS",
+    "q4": "mesh",
+    "q8": "fully interconnected node network",
+    "fp16": "A network topology where every MRL node can directly communicate with peers.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-019": {
+    "concept": "hub",
+    "zh": "樞紐",
+    "layer": "L1",
+    "symbol": "HB",
+    "q4": "hub",
+    "q8": "central relay distribution point",
+    "fp16": "A central MRL node that aggregates and redistributes particles to spoke nodes.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-020": {
+    "concept": "root",
+    "zh": "根",
+    "layer": "L1",
+    "symbol": "RT",
+    "q4": "root",
+    "q8": "origin node of hierarchy",
+    "fp16": "The origin node from which an MRL hierarchy descends and derives authority.",
+    "origin_signature": "MrLiouWord"
+  },
+
+  "fl-021": {
+    "concept": "encode",
+    "zh": "編碼",
+    "layer": "L2",
+    "symbol": "EN",
+    "q4": "encode",
+    "q8": "transform input to particle form",
+    "fp16": "The process of transforming human language or data into MRL particle notation.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-022": {
+    "concept": "decode",
+    "zh": "解碼",
+    "layer": "L2",
+    "symbol": "DE",
+    "q4": "decode",
+    "q8": "restore particles to human form",
+    "fp16": "The process of converting MRL particle sequences back into human-readable language.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-023": {
+    "concept": "route",
+    "zh": "路由",
+    "layer": "L2",
+    "symbol": "RO",
+    "q4": "route",
+    "q8": "direct particles to destination",
+    "fp16": "The decision and execution of directing MRL particles along optimal channel paths.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-024": {
+    "concept": "merge",
+    "zh": "融合",
+    "layer": "L2",
+    "symbol": "MG",
+    "q4": "merge",
+    "q8": "combine multiple particle streams",
+    "fp16": "The operation of combining multiple MRL particle streams into a unified coherent flow.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-025": {
+    "concept": "split",
+    "zh": "分裂",
+    "layer": "L2",
+    "symbol": "SP",
+    "q4": "split",
+    "q8": "divide one stream into many",
+    "fp16": "The operation of dividing a single MRL particle stream into multiple parallel flows.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-026": {
+    "concept": "inject",
+    "zh": "注入",
+    "layer": "L2",
+    "symbol": "IJ",
+    "q4": "inject",
+    "q8": "insert particles into active flow",
+    "fp16": "The act of inserting new particles into an already-running MRL flow at a defined point.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-027": {
+    "concept": "extract",
+    "zh": "提取",
+    "layer": "L2",
+    "symbol": "EX",
+    "q4": "extract",
+    "q8": "pull particles from a source",
+    "fp16": "The act of retrieving specific particles from an MRL source without altering the source.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-028": {
+    "concept": "transform",
+    "zh": "轉換",
+    "layer": "L2",
+    "symbol": "TF",
+    "q4": "transform",
+    "q8": "change particle shape or format",
+    "fp16": "The conversion of MRL particles from one format or representation to another.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-029": {
+    "concept": "validate",
+    "zh": "驗證",
+    "layer": "L2",
+    "symbol": "VL",
+    "q4": "validate",
+    "q8": "check particle structural integrity",
+    "fp16": "The process of checking that MRL particles conform to schema and syntax rules.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-030": {
+    "concept": "compress",
+    "zh": "壓縮",
+    "layer": "L2",
+    "symbol": "CP",
+    "q4": "compress",
+    "q8": "reduce particle stream size",
+    "fp16": "The reduction of MRL particle stream size while preserving recoverable information.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-031": {
+    "concept": "expand",
+    "zh": "擴展",
+    "layer": "L2",
+    "symbol": "XP",
+    "q4": "expand",
+    "q8": "decompress or elaborate particles",
+    "fp16": "The elaboration or decompression of condensed MRL particles into fuller representations.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-032": {
+    "concept": "spawn",
+    "zh": "生成",
+    "layer": "L2",
+    "symbol": "SW",
+    "q4": "spawn",
+    "q8": "create new agent or process",
+    "fp16": "The instantiation of a new MRL agent, thread, or sub-flow from an existing one.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-033": {
+    "concept": "absorb",
+    "zh": "吸收",
+    "layer": "L2",
+    "symbol": "AB",
+    "q4": "absorb",
+    "q8": "integrate external knowledge in",
+    "fp16": "The integration of external particles or knowledge into the MRL internal particle store.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-034": {
+    "concept": "emit",
+    "zh": "發射",
+    "layer": "L2",
+    "symbol": "EM",
+    "q4": "emit",
+    "q8": "broadcast particles outward",
+    "fp16": "The outward broadcast of MRL particles to one or more receiving channels or systems.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-035": {
+    "concept": "filter",
+    "zh": "過濾",
+    "layer": "L2",
+    "symbol": "FT",
+    "q4": "filter",
+    "q8": "select subset of particles",
+    "fp16": "The selection of a qualified subset of particles from a stream based on defined criteria.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-036": {
+    "concept": "aggregate",
+    "zh": "聚合",
+    "layer": "L2",
+    "symbol": "AG",
+    "q4": "aggregate",
+    "q8": "collect particles into summary",
+    "fp16": "The collection and summarization of multiple MRL particle inputs into a single output.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-037": {
+    "concept": "index",
+    "zh": "索引",
+    "layer": "L2",
+    "symbol": "IX",
+    "q4": "index",
+    "q8": "build lookup map for particles",
+    "fp16": "The construction of a fast-lookup map over MRL particles for retrieval by key or hash.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-038": {
+    "concept": "hash",
+    "zh": "雜湊",
+    "layer": "L2",
+    "symbol": "HA",
+    "q4": "hash",
+    "q8": "deterministic fingerprint of content",
+    "fp16": "A deterministic fixed-length fingerprint computed from MRL particle content for integrity.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-039": {
+    "concept": "sign",
+    "zh": "簽章",
+    "layer": "L2",
+    "symbol": "SG",
+    "q4": "sign",
+    "q8": "cryptographic authorship proof",
+    "fp16": "An ed25519 cryptographic signature that proves authorship of an MRL particle or manifest.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-040": {
+    "concept": "verify",
+    "zh": "核實",
+    "layer": "L2",
+    "symbol": "VR",
+    "q4": "verify",
+    "q8": "confirm signature authenticity",
+    "fp16": "The confirmation that an MRL signature was produced by the claimed key holder.",
+    "origin_signature": "MrLiouWord"
+  },
+
+  "fl-041": {
+    "concept": "packet",
+    "zh": "封包",
+    "layer": "L3",
+    "symbol": "PK",
+    "q4": "packet",
+    "q8": "bundled unit of particle data",
+    "fp16": "A bounded unit of MRL particle data prepared for transmission across a channel.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-042": {
+    "concept": "manifest",
+    "zh": "清單",
+    "layer": "L3",
+    "symbol": "MF",
+    "q4": "manifest",
+    "q8": "structured list of particle refs",
+    "fp16": "A structured descriptor listing all particle references and metadata in an MRL composite.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-043": {
+    "concept": "chunk",
+    "zh": "分塊",
+    "layer": "L3",
+    "symbol": "CK",
+    "q4": "chunk",
+    "q8": "sized fragment of larger blob",
+    "fp16": "A fixed-size fragment used to transmit large MRL blobs with resumable capability.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-044": {
+    "concept": "handshake",
+    "zh": "握手",
+    "layer": "L3",
+    "symbol": "HS",
+    "q4": "handshake",
+    "q8": "mutual session initiation ritual",
+    "fp16": "The exchange of capability and identity information to establish a trusted MRL session.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-045": {
+    "concept": "session",
+    "zh": "會話",
+    "layer": "L3",
+    "symbol": "SE",
+    "q4": "session",
+    "q8": "bounded stateful interaction window",
+    "fp16": "A bounded context window within which MRL agents maintain shared stateful interaction.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-046": {
+    "concept": "heartbeat",
+    "zh": "心跳",
+    "layer": "L3",
+    "symbol": "HT",
+    "q4": "heartbeat",
+    "q8": "liveness probe signal",
+    "fp16": "A periodic liveness signal sent between MRL nodes to confirm connectivity.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-047": {
+    "concept": "ack",
+    "zh": "確認",
+    "layer": "L3",
+    "symbol": "AK",
+    "q4": "ack",
+    "q8": "positive receipt confirmation",
+    "fp16": "A positive acknowledgment that a transmitted MRL particle was received correctly.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-048": {
+    "concept": "nack",
+    "zh": "否認",
+    "layer": "L3",
+    "symbol": "NK",
+    "q4": "nack",
+    "q8": "negative receipt rejection signal",
+    "fp16": "A negative acknowledgment indicating an MRL particle was rejected or corrupted.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-049": {
+    "concept": "broadcast",
+    "zh": "廣播",
+    "layer": "L3",
+    "symbol": "BC",
+    "q4": "broadcast",
+    "q8": "one-to-all particle emission",
+    "fp16": "The simultaneous emission of an MRL particle to all nodes on a channel.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-050": {
+    "concept": "unicast",
+    "zh": "單播",
+    "layer": "L3",
+    "symbol": "UC",
+    "q4": "unicast",
+    "q8": "one-to-one directed message",
+    "fp16": "A directed MRL particle emission from one node to exactly one destination node.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-051": {
+    "concept": "multicast",
+    "zh": "多播",
+    "layer": "L3",
+    "symbol": "MC",
+    "q4": "multicast",
+    "q8": "one-to-group targeted emission",
+    "fp16": "An MRL particle emission directed to a defined subset of nodes in a group.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-052": {
+    "concept": "endpoint",
+    "zh": "端點",
+    "layer": "L3",
+    "symbol": "EP",
+    "q4": "endpoint",
+    "q8": "addressable service interface",
+    "fp16": "A named addressable interface through which external systems interact with MRL services.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-053": {
+    "concept": "adapter",
+    "zh": "適配器",
+    "layer": "L3",
+    "symbol": "AD",
+    "q4": "adapter",
+    "q8": "protocol translation shim",
+    "fp16": "A shim component that translates between an external protocol and MRL particle format.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-054": {
+    "concept": "relay",
+    "zh": "轉驛",
+    "layer": "L3",
+    "symbol": "RL",
+    "q4": "relay",
+    "q8": "forward particles between systems",
+    "fp16": "A station that receives, optionally transforms, and re-emits MRL particles onward.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-055": {
+    "concept": "gateway",
+    "zh": "閘道",
+    "layer": "L3",
+    "symbol": "GW",
+    "q4": "gateway",
+    "q8": "boundary crossing entry point",
+    "fp16": "The boundary entry point mediating traffic between external systems and MRL internals.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-056": {
+    "concept": "tunnel",
+    "zh": "隧道",
+    "layer": "L3",
+    "symbol": "TN",
+    "q4": "tunnel",
+    "q8": "encapsulated private transport",
+    "fp16": "An encapsulated transport path that carries MRL particles through foreign networks.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-057": {
+    "concept": "queue",
+    "zh": "佇列",
+    "layer": "L3",
+    "symbol": "QU",
+    "q4": "queue",
+    "q8": "ordered waiting line of particles",
+    "fp16": "An ordered buffer holding MRL particles awaiting processing by a downstream consumer.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-058": {
+    "concept": "buffer",
+    "zh": "緩衝",
+    "layer": "L3",
+    "symbol": "BF",
+    "q4": "buffer",
+    "q8": "temporary particle holding area",
+    "fp16": "A temporary holding area that absorbs bursts of MRL particles before forwarding.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-059": {
+    "concept": "stream",
+    "zh": "串流",
+    "layer": "L3",
+    "symbol": "ST",
+    "q4": "stream",
+    "q8": "continuous unbounded particle flow",
+    "fp16": "A continuous, unbounded sequence of MRL particles flowing through a channel over time.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-060": {
+    "concept": "batch",
+    "zh": "批次",
+    "layer": "L3",
+    "symbol": "BT",
+    "q4": "batch",
+    "q8": "bounded group processed together",
+    "fp16": "A bounded group of MRL particles processed atomically as a single unit.",
+    "origin_signature": "MrLiouWord"
+  },
+
+  "fl-061": {
+    "concept": "law",
+    "zh": "法則",
+    "layer": "L4",
+    "symbol": "LW",
+    "q4": "law",
+    "q8": "immutable governing rule",
+    "fp16": "An immutable governing rule within MRL that all particles and agents must obey.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-062": {
+    "concept": "contract",
+    "zh": "契約",
+    "layer": "L4",
+    "symbol": "CT",
+    "q4": "contract",
+    "q8": "mutual obligation agreement",
+    "fp16": "A formal mutual obligation between MRL agents defining expected behaviors and guarantees.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-063": {
+    "concept": "identity",
+    "zh": "身份",
+    "layer": "L4",
+    "symbol": "ID",
+    "q4": "identity",
+    "q8": "unique provable agent identifier",
+    "fp16": "The unique cryptographically provable identifier of an MRL agent or key pair.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-064": {
+    "concept": "trust",
+    "zh": "信任",
+    "layer": "L4",
+    "symbol": "TS",
+    "q4": "trust",
+    "q8": "granted access confidence level",
+    "fp16": "The assessed confidence level that determines how much authority an MRL identity is granted.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-065": {
+    "concept": "authority",
+    "zh": "授權",
+    "layer": "L4",
+    "symbol": "AU",
+    "q4": "authority",
+    "q8": "delegated decision power",
+    "fp16": "The delegated power that allows an MRL agent to make decisions on behalf of another.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-066": {
+    "concept": "version",
+    "zh": "版本",
+    "layer": "L4",
+    "symbol": "VS",
+    "q4": "version",
+    "q8": "immutable labeled state snapshot",
+    "fp16": "An immutable labeled snapshot of MRL system or dictionary state at a point in time.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-067": {
+    "concept": "diff",
+    "zh": "差異",
+    "layer": "L4",
+    "symbol": "DF",
+    "q4": "diff",
+    "q8": "delta between two versions",
+    "fp16": "The computed delta describing changes between two successive MRL state versions.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-068": {
+    "concept": "patch",
+    "zh": "補丁",
+    "layer": "L4",
+    "symbol": "PT",
+    "q4": "patch",
+    "q8": "incremental change application",
+    "fp16": "An incremental change set applied to advance an MRL artifact from one version to the next.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-069": {
+    "concept": "rollback",
+    "zh": "回滾",
+    "layer": "L4",
+    "symbol": "RB",
+    "q4": "rollback",
+    "q8": "revert to prior stable state",
+    "fp16": "The reversion of MRL state to a prior stable version upon detection of failure.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-070": {
+    "concept": "audit",
+    "zh": "稽核",
+    "layer": "L4",
+    "symbol": "AU2",
+    "q4": "audit",
+    "q8": "tamper-evident activity log",
+    "fp16": "A tamper-evident log recording every action taken on MRL particles for accountability.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-071": {
+    "concept": "intent",
+    "zh": "意圖",
+    "layer": "L4",
+    "symbol": "IN",
+    "q4": "intent",
+    "q8": "declared goal of agent action",
+    "fp16": "The declared purpose behind an MRL agent's action, used for routing and law enforcement.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-072": {
+    "concept": "context",
+    "zh": "語境",
+    "layer": "L4",
+    "symbol": "CX",
+    "q4": "context",
+    "q8": "surrounding state influencing meaning",
+    "fp16": "The surrounding state information that gives meaning to an MRL particle sequence.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-073": {
+    "concept": "schema",
+    "zh": "綱要",
+    "layer": "L4",
+    "symbol": "SC",
+    "q4": "schema",
+    "q8": "structural shape definition",
+    "fp16": "The formal structural definition against which MRL particle objects are validated.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-074": {
+    "concept": "tag",
+    "zh": "標籤",
+    "layer": "L4",
+    "symbol": "TG",
+    "q4": "tag",
+    "q8": "named pointer to a version",
+    "fp16": "A human-readable named pointer anchored to a specific MRL version or particle state.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-075": {
+    "concept": "origin",
+    "zh": "起源",
+    "layer": "L4",
+    "symbol": "OG",
+    "q4": "origin",
+    "q8": "source attribution record",
+    "fp16": "The provenance record tracing an MRL particle back to its original creator and moment.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-076": {
+    "concept": "particle",
+    "zh": "粒子",
+    "layer": "L0",
+    "symbol": "Q",
+    "q4": "particle",
+    "q8": "atomic unit of MRL knowledge",
+    "fp16": "The atomic indivisible unit of knowledge or data within the MRL particle system.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-077": {
+    "concept": "atom",
+    "zh": "原子",
+    "layer": "L0",
+    "symbol": "AT",
+    "q4": "atom",
+    "q8": "smallest indivisible element",
+    "fp16": "The smallest, indivisible element in MRL composition, below the particle abstraction.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-078": {
+    "concept": "molecule",
+    "zh": "分子",
+    "layer": "L1",
+    "symbol": "ML",
+    "q4": "molecule",
+    "q8": "bonded group of atoms",
+    "fp16": "A bonded composition of MRL atoms forming a meaningful compound structure.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-079": {
+    "concept": "wave",
+    "zh": "波形",
+    "layer": "L2",
+    "symbol": "WV",
+    "q4": "wave",
+    "q8": "propagating pattern of signals",
+    "fp16": "A propagating pattern of MRL signals that carries modulated information across the field.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-080": {
+    "concept": "modulate",
+    "zh": "調變",
+    "layer": "L2",
+    "symbol": "MD",
+    "q4": "modulate",
+    "q8": "vary signal to encode meaning",
+    "fp16": "The variation of an MRL signal parameter to encode additional information in transmission.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-081": {
+    "concept": "frequency",
+    "zh": "頻率",
+    "layer": "L2",
+    "symbol": "FR",
+    "q4": "frequency",
+    "q8": "repetition rate of signal",
+    "fp16": "The repetition rate of MRL pulse cycles, used for channel tuning and agent coordination.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-082": {
+    "concept": "amplitude",
+    "zh": "振幅",
+    "layer": "L2",
+    "symbol": "AM",
+    "q4": "amplitude",
+    "q8": "signal strength magnitude",
+    "fp16": "The magnitude of an MRL signal, representing importance or priority weight.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-083": {
+    "concept": "resonance",
+    "zh": "共振",
+    "layer": "L2",
+    "symbol": "RS",
+    "q4": "resonance",
+    "q8": "amplified mutual reinforcement",
+    "fp16": "Mutual reinforcement between MRL agents that amplifies shared signal patterns.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-084": {
+    "concept": "distill",
+    "zh": "蒸餾",
+    "layer": "L2",
+    "symbol": "DS",
+    "q4": "distill",
+    "q8": "purify essence from source",
+    "fp16": "The extraction and purification of essential particles from a complex source system.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-085": {
+    "concept": "atomize",
+    "zh": "霧化",
+    "layer": "L2",
+    "symbol": "AZ",
+    "q4": "atomize",
+    "q8": "break into particle elements",
+    "fp16": "The decomposition of complex structures into discrete MRL particle elements.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-086": {
+    "concept": "quantize",
+    "zh": "量化",
+    "layer": "L2",
+    "symbol": "QZ",
+    "q4": "quantize",
+    "q8": "discretize at chosen precision",
+    "fp16": "The discretization of MRL particle representations at symbol, q4, q8, or fp16 precision.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-087": {
+    "concept": "store",
+    "zh": "儲存",
+    "layer": "L2",
+    "symbol": "SR",
+    "q4": "store",
+    "q8": "persist particles to storage",
+    "fp16": "The persistence of MRL particles to a content-addressed or relational store.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-088": {
+    "concept": "retrieve",
+    "zh": "取回",
+    "layer": "L2",
+    "symbol": "RV",
+    "q4": "retrieve",
+    "q8": "fetch stored particles by key",
+    "fp16": "The retrieval of previously stored MRL particles using a key, hash, or query.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-089": {
+    "concept": "lock",
+    "zh": "鎖定",
+    "layer": "L2",
+    "symbol": "LK",
+    "q4": "lock",
+    "q8": "prevent concurrent mutation",
+    "fp16": "A concurrency control mechanism preventing simultaneous mutation of shared MRL state.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-090": {
+    "concept": "unlock",
+    "zh": "解鎖",
+    "layer": "L2",
+    "symbol": "UL",
+    "q4": "unlock",
+    "q8": "release concurrency constraint",
+    "fp16": "The release of an MRL lock, allowing other agents to proceed with mutation.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-091": {
+    "concept": "snapshot",
+    "zh": "快照",
+    "layer": "L2",
+    "symbol": "SN",
+    "q4": "snapshot",
+    "q8": "point-in-time state capture",
+    "fp16": "A point-in-time immutable capture of the full MRL particle store state.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-092": {
+    "concept": "restore",
+    "zh": "還原",
+    "layer": "L2",
+    "symbol": "RE",
+    "q4": "restore",
+    "q8": "recover state from snapshot",
+    "fp16": "The recovery of MRL particle store state from a previously taken snapshot.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-093": {
+    "concept": "inference",
+    "zh": "推論",
+    "layer": "L4",
+    "symbol": "IF",
+    "q4": "inference",
+    "q8": "derive conclusions from particles",
+    "fp16": "The derivation of new knowledge from existing MRL particles using LLM or rule engines.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-094": {
+    "concept": "embedding",
+    "zh": "嵌入",
+    "layer": "L4",
+    "symbol": "EB",
+    "q4": "embedding",
+    "q8": "dense vector particle encoding",
+    "fp16": "A dense vector representation of an MRL particle for similarity search and reasoning.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-095": {
+    "concept": "prompt",
+    "zh": "提示詞",
+    "layer": "L4",
+    "symbol": "PR",
+    "q4": "prompt",
+    "q8": "instruction input to LLM",
+    "fp16": "A structured instruction input passed to an LLM as part of MRL inference pipeline.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-096": {
+    "concept": "response",
+    "zh": "回應",
+    "layer": "L4",
+    "symbol": "RP",
+    "q4": "response",
+    "q8": "output returned by agent",
+    "fp16": "The output particles returned by an MRL agent or LLM after processing an input.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-097": {
+    "concept": "token",
+    "zh": "語元",
+    "layer": "L4",
+    "symbol": "TK",
+    "q4": "token",
+    "q8": "lexical unit from text split",
+    "fp16": "A lexical unit produced by splitting text, used as the bridge between human text and particles.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-098": {
+    "concept": "fusion",
+    "zh": "融合",
+    "layer": "L2",
+    "symbol": "FN",
+    "q4": "fusion",
+    "q8": "blend multiple sources coherently",
+    "fp16": "The coherent blending of multiple MRL input sources into a unified particle representation.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-099": {
+    "concept": "echo",
+    "zh": "回響",
+    "layer": "L3",
+    "symbol": "EC",
+    "q4": "echo",
+    "q8": "reflected copy of signal",
+    "fp16": "A reflected copy of an MRL signal returned to the sender for confirmation or analysis.",
+    "origin_signature": "MrLiouWord"
+  },
+  "fl-100": {
+    "concept": "jump",
+    "zh": "跳躍",
+    "layer": "L3",
+    "symbol": "JP",
+    "q4": "jump",
+    "q8": "switch to alternate channel",
+    "fp16": "The act of switching an MRL agent or flow to a different channel or frequency.",
+    "origin_signature": "MrLiouWord"
+  }
+}
