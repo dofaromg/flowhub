@@ -1,0 +1,10 @@
+# MRL_RelayStation — Python dependencies
+# origin_signature : MrLiouWord
+
+# HTTP API server (optional — only needed for MRL_relay_api.py)
+flask>=3.0
+
+# Cryptographic signatures (optional — only needed for MRL_verifier.py)
+cryptography>=41
+
+# No other third-party dependencies required for core translator / aggregator / router.
