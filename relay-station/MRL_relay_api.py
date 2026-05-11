@@ -167,8 +167,8 @@ def create_app() -> "Flask":
             sig = sign(payload)
             chash = content_hash(payload)
             return jsonify({"signature": sig, "content_hash": chash})
-        except Exception as exc:  # noqa: BLE001
-            return jsonify({"error": str(exc)}), 500
+        except Exception:  # noqa: BLE001
+            return jsonify({"error": "signing failed"}), 500
 
     # ----------------------------------------------------------------
     # Verify
@@ -188,8 +188,8 @@ def create_app() -> "Flask":
         try:
             ok = verify(payload, signature)
             return jsonify({"valid": ok})
-        except Exception as exc:  # noqa: BLE001
-            return jsonify({"error": str(exc)}), 500
+        except Exception:  # noqa: BLE001
+            return jsonify({"error": "verification failed"}), 500
 
     # ----------------------------------------------------------------
     # Dictionary stats
