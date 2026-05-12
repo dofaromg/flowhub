@@ -135,7 +135,7 @@ mrl/
 ├── query.py             # ParticleQuery — graph-traversal query layer
 └── __main__.py          # CLI entry point
 tests/
-└── test_law0.py         # 37 unit tests (in-memory SQLite)
+└── test_law0.py         # 40 unit tests (temporary file-based SQLite)
 ```
 
 #### Quick Start

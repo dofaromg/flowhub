@@ -60,7 +60,7 @@ class ParticleQuery:
 
     def by_kind(self, kind: str) -> list[Particle]:
         """Return all particles of the given kind."""
-        return self._store.load_kind(kind)
+        return [p for p in self._index().values() if p.kind == kind]
 
     def by_id(self, particle_id: str) -> Particle | None:
         """Return a single particle by id."""
@@ -76,7 +76,7 @@ class ParticleQuery:
 
             q.find("orders", lambda p: p.value.get("status") == "shipped")
         """
-        return [p for p in self.by_kind(kind) if predicate(p)]
+        return [p for p in self._index().values() if p.kind == kind and predicate(p)]
 
     def all(self) -> list[Particle]:
         """Return every particle in the library."""
