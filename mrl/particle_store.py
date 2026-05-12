@@ -156,6 +156,7 @@ def _safe_name(name: str) -> str:
 
 @contextmanager
 def _locked_index(lock_path: Path) -> Iterator[None]:
+    """Serialize index updates with a lock file when fcntl is available."""
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a+", encoding="utf-8") as lock_file:
         if fcntl is not None:
