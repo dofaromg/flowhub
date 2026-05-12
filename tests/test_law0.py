@@ -1,8 +1,8 @@
 """
 Tests for the MRL law_0 particle transformation pipeline.
 
-Uses an in-memory SQLite database so no external dependencies are required
-beyond sqlalchemy (already in requirements.txt).
+Uses a temporary file-based SQLite database so multiple SQLAlchemy
+connections can inspect the same schema and rows during each test.
 """
 
 from __future__ import annotations
@@ -14,11 +14,12 @@ from pathlib import Path
 import pytest
 import sqlalchemy as sa
 
-from mrl.particle import Particle, Relation, _derive_id
+from mrl.particle import Particle, Relation
 from mrl.sql_ingest import SQLIngestor
 from mrl.sql_to_law0 import transform
 from mrl.particle_store import ParticleStore
 from mrl.query import ParticleQuery
+from mrl.__main__ import _build_parser
 
 
 # ---------------------------------------------------------------------------
@@ -196,6 +197,28 @@ class TestTransform:
             for rel in p.relations:
                 assert rel.target_id in particle_ids
 
+    def test_duplicate_rows_preserve_distinct_particles(self, tmp_path):
+        db_path = tmp_path / "duplicates.db"
+        engine = sa.create_engine(f"sqlite:///{db_path}")
+        with engine.begin() as conn:
+            conn.execute(sa.text("""
+                CREATE TABLE events (
+                    label TEXT,
+                    status TEXT
+                )
+            """))
+            conn.execute(sa.text(
+                "INSERT INTO events (label, status) VALUES "
+                "('deploy', 'ok'), "
+                "('deploy', 'ok')"
+            ))
+
+        particles = transform(SQLIngestor(f"sqlite:///{db_path}"))
+
+        assert len(particles) == 2
+        assert len({p.id for p in particles}) == 2
+        assert all(p.kind == "events" for p in particles)
+
 
 # ---------------------------------------------------------------------------
 # particle_store.py tests
@@ -304,6 +327,18 @@ class TestParticleQuery:
         assert len(results) == 1
         assert results[0].value["x"] == 1
 
+    def test_by_kind_uses_cached_index_until_refresh(self, store_dir):
+        store, *_ = self._setup_store(store_dir)
+        q = ParticleQuery(store)
+
+        assert len(q.by_kind("alpha")) == 2
+
+        store.write([Particle.make(kind="alpha", value={"x": 3})])
+        assert len(q.by_kind("alpha")) == 2
+
+        q.refresh()
+        assert len(q.by_kind("alpha")) == 3
+
     def test_follow_relation(self, store_dir):
         store, p1, p2, p3 = self._setup_store(store_dir)
         q = ParticleQuery(store)
@@ -352,3 +387,11 @@ class TestParticleQuery:
         store, *_ = self._setup_store(store_dir)
         q = ParticleQuery(store)
         assert len(q.all()) == 3
+
+
+class TestCLI:
+    def test_tables_requires_at_least_one_value(self):
+        parser = _build_parser()
+
+        with pytest.raises(SystemExit):
+            parser.parse_args(["sqlite:///tmp.db", "./particle_lib", "--tables"])

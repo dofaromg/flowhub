@@ -26,15 +26,21 @@ from __future__ import annotations
 
 import json
 import logging
-import os
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
+
+try:
+    import fcntl
+except ImportError:  # pragma: no cover
+    fcntl = None
 
 from .particle import Particle
 
 logger = logging.getLogger(__name__)
 
 _INDEX_FILE = "index.json"
+_LOCK_FILE = ".index.lock"
 
 
 class ParticleStore:
@@ -63,21 +69,22 @@ class ParticleStore:
         The master index at ``<root>/index.json`` is updated atomically.
         Existing particles with the same id are overwritten.
         """
-        index = self._load_index()
+        with _locked_index(self.root / _LOCK_FILE):
+            index = self._load_index()
 
-        for particle in particles:
-            kind_dir = self.root / _safe_name(particle.kind)
-            kind_dir.mkdir(parents=True, exist_ok=True)
+            for particle in particles:
+                kind_dir = self.root / _safe_name(particle.kind)
+                kind_dir.mkdir(parents=True, exist_ok=True)
 
-            file_path = kind_dir / f"{particle.id}.json"
-            file_path.write_text(particle.to_json(), encoding="utf-8")
+                file_path = kind_dir / f"{particle.id}.json"
+                file_path.write_text(particle.to_json(), encoding="utf-8")
 
-            index[particle.id] = {
-                "kind": particle.kind,
-                "file": str(file_path.relative_to(self.root)),
-            }
+                index[particle.id] = {
+                    "kind": particle.kind,
+                    "file": str(file_path.relative_to(self.root)),
+                }
 
-        self._save_index(index)
+            self._save_index(index)
         logger.info("Wrote %d particle(s) to %s.", len(particles), self.root)
 
     # ------------------------------------------------------------------
@@ -145,3 +152,16 @@ class ParticleStore:
 def _safe_name(name: str) -> str:
     """Convert a table/kind name to a filesystem-safe directory name."""
     return "".join(c if c.isalnum() or c in "-_" else "_" for c in name)
+
+
+@contextmanager
+def _locked_index(lock_path: Path) -> Iterator[None]:
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+", encoding="utf-8") as lock_file:
+        if fcntl is not None:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)

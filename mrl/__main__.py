@@ -34,7 +34,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("dsn", help="SQLAlchemy DSN, e.g. sqlite:///mydb.sqlite")
     p.add_argument("store_dir", help="Directory for the particle file library")
     p.add_argument(
-        "--tables", nargs="*", metavar="TABLE",
+        "--tables", nargs="+", metavar="TABLE",
         help="Restrict ingestion to specific tables (default: all tables)"
     )
     p.add_argument(

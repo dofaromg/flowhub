@@ -20,10 +20,11 @@ Usage
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import Any
 
-from .particle import Particle, Relation, _derive_id
+from .particle import Particle, Relation
 from .sql_ingest import SQLIngestor
 
 logger = logging.getLogger(__name__)
@@ -55,20 +56,33 @@ def transform(ingestor: SQLIngestor) -> list[Particle]:
     rows_by_table = ingestor.get_rows()
 
     # Step 1 — build base particles (no relations yet)
-    particles: dict[str, Particle] = {}   # id → Particle
+    particles_by_id: dict[str, Particle] = {}
+    row_particles: dict[tuple[str, int], Particle] = {}
+    duplicate_counts: dict[tuple[str, str], int] = {}
 
     for table, rows in rows_by_table.items():
-        for row in rows:
+        for row_idx, row in enumerate(rows):
             p = Particle.make(kind=table, value=_serialize_row(row))
-            if p.id in particles:
+            duplicate_key = (table, p.id)
+            duplicate_count = duplicate_counts.get(duplicate_key, 0)
+            if duplicate_count:
+                p.id = _derive_duplicate_id(p.id, duplicate_count)
                 logger.warning(
-                    "Duplicate particle id %s for table %r — row may be identical to another.",
+                    "Duplicate particle id %s for table %r — assigning distinct duplicate id.",
                     p.id[:12],
                     table,
                 )
-            particles[p.id] = p
+            duplicate_counts[duplicate_key] = duplicate_count + 1
+            particles_by_id[p.id] = p
+            row_particles[(table, row_idx)] = p
 
-    logger.info("Created %d base particles from %d table(s).", len(particles), len(rows_by_table))
+    logger.info(
+        "Created %d base particles from %d table(s).",
+        len(particles_by_id),
+        len(rows_by_table),
+    )
+
+    fk_target_indexes = _build_fk_target_indexes(schema, rows_by_table, row_particles)
 
     # Step 2 — wire FK relations
     for table, table_schema in schema.items():
@@ -77,17 +91,16 @@ def transform(ingestor: SQLIngestor) -> list[Particle]:
             continue
 
         rows = rows_by_table.get(table, [])
-        for row in rows:
+        for row_idx, row in enumerate(rows):
             # Find this row's particle
-            src_id = _derive_id(table, _serialize_row(row))
-            src_particle = particles.get(src_id)
-            if src_particle is None:
-                continue  # shouldn't happen
+            src_particle = row_particles[(table, row_idx)]
 
             for fk in fks:
                 constrained_cols: list[str] = fk["constrained_columns"]
-                referred_table: str = fk["referred_table"]
+                referred_table = fk["referred_table"]
                 referred_cols: list[str] = fk["referred_columns"]
+                if not referred_table or not constrained_cols or not referred_cols:
+                    continue
 
                 # Build the value dict of the referenced row from FK column values
                 # (we only know the referenced PK values from the FK columns)
@@ -98,12 +111,11 @@ def transform(ingestor: SQLIngestor) -> list[Particle]:
 
                 # Find matching target particle by scanning referred table rows
                 target_id = _find_target_id(
-                    referred_table,
                     ref_row_partial,
-                    rows_by_table.get(referred_table, []),
+                    fk_target_indexes.get((referred_table, tuple(referred_cols)), {}),
                 )
 
-                if target_id and target_id in particles:
+                if target_id and target_id in particles_by_id:
                     rel_kind = f"{table}__{referred_table}"
                     relation = Relation(kind=rel_kind, target_id=target_id)
                     # Avoid duplicate relations
@@ -117,10 +129,10 @@ def transform(ingestor: SQLIngestor) -> list[Particle]:
                         ref_row_partial,
                     )
 
-    total_relations = sum(len(p.relations) for p in particles.values())
+    total_relations = sum(len(p.relations) for p in particles_by_id.values())
     logger.info("Wired %d FK relation edge(s) across all particles.", total_relations)
 
-    return list(particles.values())
+    return list(particles_by_id.values())
 
 
 # ---------------------------------------------------------------------------
@@ -136,25 +148,49 @@ def _json_safe(v: Any) -> bool:
     return v is None or isinstance(v, (bool, int, float, str, list, dict))
 
 
-def _build_row_index(
+def _build_fk_target_index(
     referred_table: str,
     candidate_rows: list[dict[str, Any]],
     key_cols: list[str],
-) -> dict[tuple, str]:
+    row_particles: dict[tuple[str, int], Particle],
+) -> dict[tuple, list[str]]:
     """
     Build a lookup dict from (key_col_values…) → particle_id for O(1) FK lookups.
     """
-    index: dict[tuple, str] = {}
-    for row in candidate_rows:
+    index: dict[tuple, list[str]] = {}
+    for row_idx, row in enumerate(candidate_rows):
         key = tuple(row.get(col) for col in key_cols)
-        index[key] = _derive_id(referred_table, _serialize_row(row))
+        particle = row_particles[(referred_table, row_idx)]
+        index.setdefault(key, []).append(particle.id)
     return index
 
 
+def _build_fk_target_indexes(
+    schema: dict[str, Any],
+    rows_by_table: dict[str, list[dict[str, Any]]],
+    row_particles: dict[tuple[str, int], Particle],
+) -> dict[tuple[str, tuple[str, ...]], dict[tuple, list[str]]]:
+    indexes: dict[tuple[str, tuple[str, ...]], dict[tuple, list[str]]] = {}
+    for table_schema in schema.values():
+        for fk in table_schema.get("foreign_keys", []):
+            referred_table = fk["referred_table"]
+            referred_cols = tuple(fk["referred_columns"])
+            if not referred_table or not referred_cols:
+                continue
+            index_key = (referred_table, referred_cols)
+            if index_key not in indexes:
+                indexes[index_key] = _build_fk_target_index(
+                    referred_table,
+                    rows_by_table.get(referred_table, []),
+                    list(referred_cols),
+                    row_particles,
+                )
+    return indexes
+
+
 def _find_target_id(
-    referred_table: str,
     ref_pk_values: dict[str, Any],
-    candidate_rows: list[dict[str, Any]],
+    index: dict[tuple, list[str]],
 ) -> str | None:
     """
     Find the particle id of the row in ``referred_table`` whose columns
@@ -163,7 +199,12 @@ def _find_target_id(
     """
     if any(v is None for v in ref_pk_values.values()):
         return None
-    key_cols = list(ref_pk_values.keys())
-    index = _build_row_index(referred_table, candidate_rows, key_cols)
-    key = tuple(ref_pk_values[col] for col in key_cols)
-    return index.get(key)
+    key = tuple(ref_pk_values[col] for col in ref_pk_values)
+    matches = index.get(key)
+    if not matches:
+        return None
+    return matches[0]
+
+
+def _derive_duplicate_id(base_id: str, duplicate_count: int) -> str:
+    return hashlib.sha256(f"{base_id}:{duplicate_count}".encode("utf-8")).hexdigest()
