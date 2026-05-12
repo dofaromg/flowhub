@@ -29,9 +29,9 @@ from .sql_ingest import SQLIngestor
 
 logger = logging.getLogger(__name__)
 
-LookupKey = tuple[Any, ...]
-FKLookupIndex = dict[LookupKey, list[str]]
-FKLookupIndexes = dict[tuple[str, tuple[str, ...]], FKLookupIndex]
+LookupKey = tuple[Any, ...]  # foreign-key column values in lookup order
+FKLookupIndex = dict[LookupKey, list[str]]  # lookup key → matching particle ids
+FKLookupIndexes = dict[tuple[str, tuple[str, ...]], FKLookupIndex]  # per target table/key set
 
 
 def transform(ingestor: SQLIngestor) -> list[Particle]:
@@ -211,4 +211,5 @@ def _find_target_id(
 
 
 def _derive_duplicate_id(base_id: str, duplicate_count: int) -> str:
+    """Derive a stable unique id for a duplicate row from its base id and occurrence count."""
     return hashlib.sha256(f"{base_id}:{duplicate_count}".encode("utf-8")).hexdigest()
