@@ -29,6 +29,10 @@ from .sql_ingest import SQLIngestor
 
 logger = logging.getLogger(__name__)
 
+LookupKey = tuple[Any, ...]
+FKLookupIndex = dict[LookupKey, list[str]]
+FKLookupIndexes = dict[tuple[str, tuple[str, ...]], FKLookupIndex]
+
 
 def transform(ingestor: SQLIngestor) -> list[Particle]:
     """
@@ -56,9 +60,9 @@ def transform(ingestor: SQLIngestor) -> list[Particle]:
     rows_by_table = ingestor.get_rows()
 
     # Step 1 — build base particles (no relations yet)
-    particles_by_id: dict[str, Particle] = {}
-    row_particles: dict[tuple[str, int], Particle] = {}
-    duplicate_counts: dict[tuple[str, str], int] = {}
+    particles_by_id: dict[str, Particle] = {}  # final particle id → Particle
+    row_particles: dict[tuple[str, int], Particle] = {}  # (table, row_index) → Particle
+    duplicate_counts: dict[tuple[str, str], int] = {}  # (table, base_id) → duplicate count
 
     for table, rows in rows_by_table.items():
         for row_idx, row in enumerate(rows):
@@ -153,11 +157,11 @@ def _build_fk_target_index(
     candidate_rows: list[dict[str, Any]],
     key_cols: list[str],
     row_particles: dict[tuple[str, int], Particle],
-) -> dict[tuple, list[str]]:
+) -> FKLookupIndex:
     """
     Build a lookup dict from (key_col_values…) → particle_id for O(1) FK lookups.
     """
-    index: dict[tuple, list[str]] = {}
+    index: FKLookupIndex = {}
     for row_idx, row in enumerate(candidate_rows):
         key = tuple(row.get(col) for col in key_cols)
         particle = row_particles[(referred_table, row_idx)]
@@ -169,8 +173,8 @@ def _build_fk_target_indexes(
     schema: dict[str, Any],
     rows_by_table: dict[str, list[dict[str, Any]]],
     row_particles: dict[tuple[str, int], Particle],
-) -> dict[tuple[str, tuple[str, ...]], dict[tuple, list[str]]]:
-    indexes: dict[tuple[str, tuple[str, ...]], dict[tuple, list[str]]] = {}
+) -> FKLookupIndexes:
+    indexes: FKLookupIndexes = {}
     for table_schema in schema.values():
         for fk in table_schema.get("foreign_keys", []):
             referred_table = fk["referred_table"]
@@ -190,7 +194,7 @@ def _build_fk_target_indexes(
 
 def _find_target_id(
     ref_pk_values: dict[str, Any],
-    index: dict[tuple, list[str]],
+    index: FKLookupIndex,
 ) -> str | None:
     """
     Find the particle id of the row in ``referred_table`` whose columns

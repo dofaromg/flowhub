@@ -160,6 +160,8 @@ def _locked_index(lock_path: Path) -> Iterator[None]:
     with lock_path.open("a+", encoding="utf-8") as lock_file:
         if fcntl is not None:
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        else:  # pragma: no cover
+            logger.debug("fcntl is unavailable; ParticleStore index writes are not process-locked.")
         try:
             yield
         finally:
