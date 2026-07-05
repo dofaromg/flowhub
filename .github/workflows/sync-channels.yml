@@ -58,7 +58,20 @@ jobs:
       - name: Detect Default Branch
         id: detect-branch
         run: |
-          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "master")
+          DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
+          if [ -z "$DEFAULT_BRANCH" ]; then
+            if git show-ref --verify --quiet refs/remotes/origin/main; then
+              DEFAULT_BRANCH="main"
+            elif git show-ref --verify --quiet refs/remotes/origin/master; then
+              DEFAULT_BRANCH="master"
+            fi
+          fi
+          if [ -z "$DEFAULT_BRANCH" ]; then
+            DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | sed -n '/HEAD branch/s/.*: //p' || true)
+          fi
+          if [ -z "$DEFAULT_BRANCH" ]; then
+            DEFAULT_BRANCH="master"
+          fi
           echo "default_branch=$DEFAULT_BRANCH" >> $GITHUB_OUTPUT
           echo "Detected default branch: $DEFAULT_BRANCH"
 
